@@ -29,31 +29,41 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Animated background dots */}
+    <div className="min-h-screen gradient-bg flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Enhanced animated background dots */}
       <div className="floating-dots">
+        <div className="floating-dot"></div>
+        <div className="floating-dot"></div>
         <div className="floating-dot"></div>
         <div className="floating-dot"></div>
         <div className="floating-dot"></div>
       </div>
       
       <div className="w-full max-w-2xl z-10">
-        {gameState === 'menu' && <Menu onStartGame={startGame} />}
+        {gameState === 'menu' && (
+          <div className="animate-fade-in">
+            <Menu onStartGame={startGame} />
+          </div>
+        )}
         {gameState === 'quiz' && (
-          <Quiz 
-            difficulty={difficulty} 
-            onEndGame={endGame}
-            onBackToMenu={backToMenu}
-          />
+          <div className="animate-fade-in">
+            <Quiz 
+              difficulty={difficulty} 
+              onEndGame={endGame}
+              onBackToMenu={backToMenu}
+            />
+          </div>
         )}
         {gameState === 'results' && (
-          <Results 
-            score={score} 
-            totalQuestions={totalQuestions}
-            difficulty={difficulty}
-            onPlayAgain={() => startGame(difficulty)}
-            onBackToMenu={backToMenu}
-          />
+          <div className="animate-fade-in">
+            <Results 
+              score={score} 
+              totalQuestions={totalQuestions}
+              difficulty={difficulty}
+              onPlayAgain={() => startGame(difficulty)}
+              onBackToMenu={backToMenu}
+            />
+          </div>
         )}
       </div>
     </div>

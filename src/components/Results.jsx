@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 
 function Results({ score, totalQuestions, difficulty, onPlayAgain, onBackToMenu }) {
   const [highScore, setHighScore] = useState(0)
+  const [showConfetti, setShowConfetti] = useState(false)
   const accuracy = Math.round((score / totalQuestions) * 100)
 
   useEffect(() => {
@@ -16,7 +17,13 @@ function Results({ score, totalQuestions, difficulty, onPlayAgain, onBackToMenu 
       localStorage.setItem(`javaQuizHighScore_${difficulty}`, score.toString())
       setHighScore(score)
     }
-  }, [score, difficulty])
+
+    // Show confetti for perfect score
+    if (accuracy === 100) {
+      setShowConfetti(true)
+      setTimeout(() => setShowConfetti(false), 5000)
+    }
+  }, [score, difficulty, accuracy])
 
   const getDifficultyColor = () => {
     switch (difficulty) {
@@ -47,10 +54,15 @@ function Results({ score, totalQuestions, difficulty, onPlayAgain, onBackToMenu 
   const isPerfectScore = accuracy === 100
 
   return (
-    <div className="bg-white rounded-2xl shadow-2xl p-8 text-center max-w-md mx-auto relative">
-      {/* Confetti Animation for Perfect Score */}
-      {isPerfectScore && (
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+    <div className="glass-card rounded-3xl p-8 text-center max-w-md mx-auto relative animate-fade-in card-hover">
+      {/* Enhanced Confetti Animation for Perfect Score */}
+      {showConfetti && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden z-10">
+          <div className="confetti"></div>
+          <div className="confetti"></div>
+          <div className="confetti"></div>
+          <div className="confetti"></div>
+          <div className="confetti"></div>
           <div className="confetti"></div>
           <div className="confetti"></div>
           <div className="confetti"></div>
@@ -59,58 +71,86 @@ function Results({ score, totalQuestions, difficulty, onPlayAgain, onBackToMenu 
         </div>
       )}
 
-      <h1 className="text-4xl font-bold text-gray-800 mb-6">Game Over!</h1>
-      
-      {/* Score Display */}
-      <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-6">
-        <div className="text-6xl font-bold text-blue-600 mb-2">
-          {score}/{totalQuestions}
-        </div>
-        <div className="text-2xl font-semibold text-gray-700 mb-2">
-          {accuracy}% Accuracy
-        </div>
-        <div className={`text-lg font-medium ${getDifficultyColor()}`}>
-          {getDifficultyLabel()} Difficulty
-        </div>
-      </div>
-
-      {/* Performance Message */}
-      <div className="mb-6">
-        <p className="text-lg text-gray-700 mb-4">
-          {getPerformanceMessage()}
-        </p>
+      <div className="relative z-20">
+        <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-8">
+          Game Over!
+        </h1>
         
-        {/* High Score */}
-        {score >= highScore && (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
-            <div className="text-yellow-800 font-medium">
-              🎯 New High Score for {getDifficultyLabel()}!
+        {/* Enhanced Score Display */}
+        <div className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 rounded-3xl p-8 mb-8 border border-white/20 shadow-2xl">
+          <div className="text-7xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+            {score}/{totalQuestions}
+          </div>
+          <div className="text-3xl font-bold text-gray-700 mb-3">
+            {accuracy}% Accuracy
+          </div>
+          <div className={`text-xl font-semibold ${getDifficultyColor()}`}>
+            {getDifficultyLabel()} Difficulty
+          </div>
+          
+          {/* Performance Badge */}
+          {isPerfectScore && (
+            <div className="mt-4 bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+              🏆 PERFECT SCORE!
             </div>
-          </div>
-        )}
-        
-        {score < highScore && (
-          <div className="text-gray-600 text-sm mb-4">
-            High Score: {highScore}/{totalQuestions}
-          </div>
-        )}
-      </div>
+          )}
+          {accuracy >= 80 && accuracy < 100 && (
+            <div className="mt-4 bg-gradient-to-r from-green-400 to-blue-400 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+              🌟 EXCELLENT!
+            </div>
+          )}
+        </div>
 
-      {/* Action Buttons */}
-      <div className="space-y-4">
-        <button
-          onClick={onPlayAgain}
-          className="w-full py-4 px-6 bg-blue-500 text-white rounded-lg font-bold text-lg hover:bg-blue-600 transition-all transform hover:scale-105 shadow-lg"
-        >
-          Play Again
-        </button>
-        
-        <button
-          onClick={onBackToMenu}
-          className="w-full py-4 px-6 bg-gray-500 text-white rounded-lg font-bold text-lg hover:bg-gray-600 transition-all transform hover:scale-105 shadow-lg"
-        >
-          Back to Menu
-        </button>
+        {/* Enhanced Performance Message */}
+        <div className="mb-8">
+          <p className="text-xl text-gray-700 mb-6 leading-relaxed">
+            {getPerformanceMessage()}
+          </p>
+          
+          {/* Enhanced High Score Display */}
+          {score >= highScore && (
+            <div className="bg-gradient-to-r from-yellow-100 to-orange-100 border-2 border-yellow-300 rounded-2xl p-6 mb-6 animate-fade-in">
+              <div className="flex items-center justify-center space-x-2">
+                <span className="text-2xl">🎯</span>
+                <span className="text-yellow-800 font-bold text-lg">
+                  New High Score for {getDifficultyLabel()}!
+                </span>
+                <span className="text-2xl">🎯</span>
+              </div>
+            </div>
+          )}
+          
+          {score < highScore && (
+            <div className="bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl p-4 mb-6">
+              <div className="text-gray-600 text-lg">
+                High Score: <span className="font-bold">{highScore}/{totalQuestions}</span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Enhanced Action Buttons */}
+        <div className="space-y-4">
+          <button
+            onClick={onPlayAgain}
+            className="w-full py-5 px-6 btn-gradient-blue rounded-2xl font-bold text-xl btn-modern"
+          >
+            <div className="flex items-center justify-center space-x-3">
+              <span className="text-2xl">🔄</span>
+              <span>Play Again</span>
+            </div>
+          </button>
+          
+          <button
+            onClick={onBackToMenu}
+            className="w-full py-5 px-6 btn-gradient-purple rounded-2xl font-bold text-xl btn-modern"
+          >
+            <div className="flex items-center justify-center space-x-3">
+              <span className="text-2xl">🏠</span>
+              <span>Back to Menu</span>
+            </div>
+          </button>
+        </div>
       </div>
     </div>
   )
