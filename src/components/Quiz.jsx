@@ -5,7 +5,6 @@ function Quiz({ difficulty, onEndGame, onBackToMenu }) {
   const [questions, setQuestions] = useState([])
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [userAnswer, setUserAnswer] = useState('')
-  const [selectedChoice, setSelectedChoice] = useState('')
   const [score, setScore] = useState(0)
   const [feedback, setFeedback] = useState('')
   const [isCorrect, setIsCorrect] = useState(null)
@@ -25,24 +24,12 @@ function Quiz({ difficulty, onEndGame, onBackToMenu }) {
 
   const checkAnswer = () => {
     const currentQuestion = questions[currentQuestionIndex]
-    let userResponse = ''
     
-    if (currentQuestion.type === 'multiple_choice') {
-      if (!selectedChoice) return
-      userResponse = selectedChoice
-    } else {
-      if (!userAnswer.trim()) return
-      userResponse = userAnswer
-    }
-
-    let correct = false
-    if (currentQuestion.type === 'multiple_choice') {
-      correct = userResponse === currentQuestion.answer
-    } else {
-      const normalizedUser = normalizeAnswer(userResponse)
-      const normalizedCorrect = normalizeAnswer(currentQuestion.answer)
-      correct = normalizedUser === normalizedCorrect
-    }
+    if (!userAnswer.trim()) return
+    
+    const normalizedUser = normalizeAnswer(userAnswer)
+    const normalizedCorrect = normalizeAnswer(currentQuestion.answer)
+    const correct = normalizedUser === normalizedCorrect
     
     setIsCorrect(correct)
     setShowFeedback(true)
@@ -63,7 +50,6 @@ function Quiz({ difficulty, onEndGame, onBackToMenu }) {
   const nextQuestion = () => {
     setShowFeedback(false)
     setUserAnswer('')
-    setSelectedChoice('')
     setFeedback('')
     setIsCorrect(null)
     
@@ -75,7 +61,7 @@ function Quiz({ difficulty, onEndGame, onBackToMenu }) {
   }
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey && currentQuestion.type === 'typing') {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       checkAnswer()
     }
@@ -127,48 +113,19 @@ function Quiz({ difficulty, onEndGame, onBackToMenu }) {
 
       {/* Answer Input */}
       <div className="mb-6">
-        {currentQuestion.type === 'multiple_choice' ? (
-          <div className="space-y-3">
-            {currentQuestion.choices.map((choice, index) => (
-              <button
-                key={index}
-                onClick={() => setSelectedChoice(choice)}
-                disabled={showFeedback}
-                className={`w-full p-4 text-left border-2 rounded-lg transition-all duration-300
-                  ${selectedChoice === choice 
-                    ? 'border-blue-500 bg-blue-50' 
-                    : 'border-gray-300 hover:border-blue-300'
-                  }
-                  ${showFeedback && choice === currentQuestion.answer
-                    ? 'border-green-500 bg-green-50'
-                    : ''
-                  }
-                  ${showFeedback && choice === selectedChoice && choice !== currentQuestion.answer
-                    ? 'border-orange-500 bg-orange-50'
-                    : ''
-                  }
-                  ${showFeedback ? 'cursor-not-allowed' : 'cursor-pointer'}
-                `}
-              >
-                <span className="font-medium">{String.fromCharCode(65 + index)}.</span> {choice}
-              </button>
-            ))}
-          </div>
-        ) : (
-          <textarea
-            value={userAnswer}
-            onChange={(e) => setUserAnswer(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Type your answer here..."
-            className={`w-full p-4 border-2 rounded-lg font-mono text-sm transition-all duration-300 resize-none
-              ${showFeedback && isCorrect ? 'border-green-500 bg-green-50' : ''}
-              ${showFeedback && !isCorrect ? 'border-orange-500 bg-orange-50 animate-shake' : ''}
-              ${!showFeedback ? 'border-gray-300 focus:border-blue-500 focus:outline-none' : ''}
-            `}
-            rows={3}
-            disabled={showFeedback}
-          />
-        )}
+        <textarea
+          value={userAnswer}
+          onChange={(e) => setUserAnswer(e.target.value)}
+          onKeyPress={handleKeyPress}
+          placeholder="Type your answer here..."
+          className={`w-full p-4 border-2 rounded-lg font-mono text-sm transition-all duration-300 resize-none
+            ${showFeedback && isCorrect ? 'border-green-500 bg-green-50' : ''}
+            ${showFeedback && !isCorrect ? 'border-orange-500 bg-orange-50 animate-shake' : ''}
+            ${!showFeedback ? 'border-gray-300 focus:border-blue-500 focus:outline-none' : ''}
+          `}
+          rows={3}
+          disabled={showFeedback}
+        />
       </div>
 
       {/* Feedback */}
@@ -184,10 +141,7 @@ function Quiz({ difficulty, onEndGame, onBackToMenu }) {
       <div className="flex justify-center">
         <button
           onClick={checkAnswer}
-          disabled={
-            (currentQuestion.type === 'multiple_choice' ? !selectedChoice : !userAnswer.trim()) || 
-            showFeedback
-          }
+          disabled={!userAnswer.trim() || showFeedback}
           className={`px-8 py-3 rounded-lg font-bold text-lg transition-all transform
             ${showFeedback && isCorrect 
               ? 'bg-green-500 text-white' 
@@ -195,10 +149,7 @@ function Quiz({ difficulty, onEndGame, onBackToMenu }) {
               ? 'bg-orange-500 text-white'
               : 'bg-blue-500 text-white hover:bg-blue-600 hover:scale-105'
             }
-            ${
-              (currentQuestion.type === 'multiple_choice' ? !selectedChoice : !userAnswer.trim()) || 
-              showFeedback ? 'opacity-50 cursor-not-allowed' : ''
-            }
+            ${!userAnswer.trim() || showFeedback ? 'opacity-50 cursor-not-allowed' : ''}
           `}
         >
           {showFeedback ? (isCorrect ? 'Correct!' : 'Moving on...') : 'Enter'}

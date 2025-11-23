@@ -122,11 +122,10 @@ function Menu({ onStartGame }) {
                 <h3 className="text-lg font-semibold text-green-600 mb-2">🟢 Easy Level</h3>
                 <p className="text-gray-600 text-sm mb-2">Perfect for beginners learning Java basics!</p>
                 <ul className="text-gray-600 space-y-1 text-sm">
-                  <li>• Multiple choice questions only</li>
                   <li>• Basic Java concepts and syntax</li>
                   <li>• Variable declarations, data types, loops</li>
                   <li>• Method calls and basic arrays</li>
-                  <li>• No typing required - just click your answer!</li>
+                  <li>• Simple code completion exercises</li>
                 </ul>
               </div>
 
@@ -135,7 +134,6 @@ function Menu({ onStartGame }) {
                 <h3 className="text-lg font-semibold text-yellow-600 mb-2">🟡 Normal Level</h3>
                 <p className="text-gray-600 text-sm mb-2">For intermediate programmers ready for a challenge!</p>
                 <ul className="text-gray-600 space-y-1 text-sm">
-                  <li>• Mix of multiple choice and typing questions</li>
                   <li>• Collections (ArrayList, HashMap)</li>
                   <li>• Exception handling and switch statements</li>
                   <li>• Enhanced for loops and String methods</li>
@@ -148,7 +146,6 @@ function Menu({ onStartGame }) {
                 <h3 className="text-lg font-semibold text-red-600 mb-2">🔴 Hard Level</h3>
                 <p className="text-gray-600 text-sm mb-2">For experienced Java developers!</p>
                 <ul className="text-gray-600 space-y-1 text-sm">
-                  <li>• All typing questions - no multiple choice</li>
                   <li>• Advanced Java features and generics</li>
                   <li>• Lambda expressions and streams</li>
                   <li>• Thread safety and synchronization</li>
@@ -161,8 +158,8 @@ function Menu({ onStartGame }) {
               <div className="bg-blue-50 rounded-lg p-4">
                 <h3 className="text-lg font-semibold text-blue-700 mb-2">💡 Pro Tips</h3>
                 <ul className="text-blue-600 space-y-1 text-sm">
-                  <li>• Read each question carefully before answering</li>
-                  <li>• For typing questions, don't worry about exact spacing</li>
+                  <li>• Read each question carefully before typing</li>
+                  <li>• Don't worry about exact spacing or semicolons</li>
                   <li>• High scores are saved for each difficulty level</li>
                   <li>• Practice makes perfect - try all difficulty levels!</li>
                 </ul>
